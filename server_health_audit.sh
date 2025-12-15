@@ -78,7 +78,7 @@ check_cpu() {
     local cpu
     cpu=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
     append "CPU Usage: ${cpu}%"
-    echo "CPU{type:\"CPU_USAGE\",host:\"$HOSTNAME\"}" $cpu > "$CPU_PROM"
+    echo "CPU{type:\"CPU_USAGE\",host:\"$HOSTNAME\"}" "$cpu" > "$CPU_PROM"
     if (( $(echo "$cpu > $CPU_THRESHOLD" | bc -l) )); then
         send_alert "CRITICAL: CPU High" "CPU usage is ${cpu}%"
     fi
@@ -91,7 +91,7 @@ check_memory() {
     local mem 
     mem=$(free | awk '/Mem:/ {printf "%.1f", $3/$2*100}')
     append "Memory Usage: ${mem}%"
-        echo "Memory{type:\"Memory_USAGE\",host:\"$HOSTNAME\"}" $mem > "$MEM_PROM"
+        echo "Memory{type:\"Memory_USAGE\",host:\"$HOSTNAME\"}" "$mem" > "$MEM_PROM"
     if (( $(echo "$mem > $MEM_THRESHOLD" | bc -l) )); then
         send_alert "CRITICAL: Memory High" "Memory usage is ${mem}%"
     fi
@@ -106,7 +106,7 @@ check_disk() {
         mount=$(echo $line | awk '{print $6}')
         usage=$(echo $line | awk '{print $5}' | sed 's/%//')
         append "disk_usage $mount" "$usage"
-        echo "Disk_usage{type:\"Disk_usage\",host:\"$HOSTNAME\",Mount_point=\"$mount\"}" $usage >> "$DISK_PROM"
+        echo "Disk_usage{type:\"Disk_usage\",host:\"$HOSTNAME\",Mount_point=\"$mount\"}" "$usage" >> "$DISK_PROM"
         if [ "$usage" -ge "$DISK_THRESHOLD" ]; then
             send_alert "CRITICAL: Disk Full on $mount" "$usage% used"
         fi
