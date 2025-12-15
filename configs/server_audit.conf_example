@@ -1,0 +1,37 @@
+# Thresholds
+CPU_THRESHOLD=90
+MEM_THRESHOLD=90
+DISK_THRESHOLD=90
+LOAD_THRESHOLD=10
+LOGIN_THRESHOLD=5
+# Email settings
+EMAIL="your_email@example.com"
+
+# Critical services to monitor
+SERVICES=("nginx" "mysqld" "docker")
+
+
+# Log files to monitor
+SECURE_LOG="/var/log/secure"
+CRON_LOG="/var/log/cron"
+MAIL_LOG="/var/log/maillog"
+SYSTEM_LOG="/var/log/messages"
+WTMP_LOG="/var/log/wtmp"
+
+# Log rotation settings
+MAX_REPORTS=5
+
+# Critical ports to monitor
+PORTS=(
+  # -------------------------
+  #   # Core System & Access
+  #     # -------------------------
+  "22:tcp"     # SSH
+  "53:udp"     # DNS
+  # -------------------------
+  #   # Monitoring / Metrics
+  #     # -------------------------
+  "9090:tcp"   # Prometheus
+  "9100:tcp"   # Node Exporter
+
+  )

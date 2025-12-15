@@ -1,0 +1,17 @@
+# Reports & generated files
+reports/
+prom_files/
+
+# Local config (never push real emails)
+configs/server_audit.conf
+
+# Logs
+*.log
+
+# Editor / OS junk
+*.swp
+*.tmp
+.DS_Store
+
+# Backup files
+*~
