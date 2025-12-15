@@ -117,7 +117,7 @@ check_disk() {
 # Top 5 CPU Processes
 # -----------------------------
 top_processes() {
-    ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 6 | tail -n 5 | while read pid comm cpu mem; do
+    ps -eo pid,comm,%cpu,%mem --sort=-%cpu | head -n 6 | tail -n 5 | while read _ comm cpu mem; do
         append "top_process_${comm}_cpu" "$cpu"
         append "top_process_${comm}_mem" "$mem"
     done
