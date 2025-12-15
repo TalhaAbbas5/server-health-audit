@@ -128,7 +128,7 @@ top_processes() {
 # -----------------------------
 failed_ssh() {
     local failed
-    failed=$(sudo grep "authentication failure" "$SECURE_LOG" | grep -v "COMMAND" | wc -l)
+    failed=$(sudo grep "authentication failure" "$SECURE_LOG" | grep -cv "COMMAND")
     append "failed_ssh_logins" "$failed"
     echo "Failed_SSH{type:\"Failed_SSH\",host:\"$HOSTNAME\"}" "$failed" > "$FAILED_PROM"
     echo "$failed"
