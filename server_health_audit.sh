@@ -130,7 +130,7 @@ failed_ssh() {
     local failed
     failed=$(sudo grep "authentication failure" "$SECURE_LOG" | grep -v "COMMAND" | wc -l)
     append "failed_ssh_logins" "$failed"
-    echo "Failed_SSH{type:\"Failed_SSH\",host:\"$HOSTNAME\"}" $failed > "$FAILED_PROM"
+    echo "Failed_SSH{type:\"Failed_SSH\",host:\"$HOSTNAME\"}" "$failed" > "$FAILED_PROM"
     echo "$failed"
     if [ "$failed" -ge "$LOGIN_THRESHOLD" ]; then
      send_alert "CRITICAL: Failed SSH logins " "Count :$failed check logs : /var/log/secure"
