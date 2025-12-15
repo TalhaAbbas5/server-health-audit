@@ -16,11 +16,8 @@ fi
 HOSTNAME=$(hostname)
 
 # Output directory & file
-#OUT_DIR="$(pwd)/reports"
-#mkdir -p "$OUT_DIR"
-#REPORT_FILE="$OUT_DIR/server_report_$(date +%F_%H).txt"
 BASE_DIR="$(cd "$(dirname "$0")" && pwd)"
-echo $BASE_DIR
+echo "$BASE_DIR"
 PROM_DIR="$BASE_DIR/prom_files"
 mkdir -p "$PROM_DIR"
 REPORT_DIR="$BASE_DIR/reports"
@@ -78,7 +75,8 @@ print_header() {
 # CPU Usage
 # -----------------------------
 check_cpu() {
-    local cpu=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
+    local cpu
+    cpu=$(top -bn1 | grep "Cpu(s)" | awk '{print 100 - $8}')
     append "CPU Usage: ${cpu}%"
     echo "CPU{type:\"CPU_USAGE\",host:\"$HOSTNAME\"}" $cpu > "$CPU_PROM"
     if (( $(echo "$cpu > $CPU_THRESHOLD" | bc -l) )); then
@@ -90,7 +88,8 @@ check_cpu() {
 # Memory Usage
 # -----------------------------
 check_memory() {
-    local mem=$(free | awk '/Mem:/ {printf "%.1f", $3/$2*100}')
+    local mem 
+    mem=$(free | awk '/Mem:/ {printf "%.1f", $3/$2*100}')
     append "Memory Usage: ${mem}%"
         echo "Memory{type:\"Memory_USAGE\",host:\"$HOSTNAME\"}" $mem > "$MEM_PROM"
     if (( $(echo "$mem > $MEM_THRESHOLD" | bc -l) )); then
@@ -128,7 +127,8 @@ top_processes() {
 # Failed SSH logins and Brute-force detection
 # -----------------------------
 failed_ssh() {
-    local failed=$(sudo grep "authentication failure" "$SECURE_LOG" | grep -v "COMMAND" | wc -l)
+    local failed
+    failed=$(sudo grep "authentication failure" "$SECURE_LOG" | grep -v "COMMAND" | wc -l)
     append "failed_ssh_logins" "$failed"
     echo "Failed_SSH{type:\"Failed_SSH\",host:\"$HOSTNAME\"}" $failed > "$FAILED_PROM"
     echo "$failed"
@@ -142,7 +142,8 @@ failed_ssh() {
 # Cron job errors
 # -----------------------------
 cron_errors() {
-    local errors=$(sudo grep "error" "$CRON_LOG" | wc -l)
+    local errors
+    errors=$(sudo grep "error" "$CRON_LOG" | wc -l)
     append "cron_errors" "$errors"
 }
 
@@ -154,8 +155,8 @@ check_ports() {
         port="${entry%%:*}"
         proto="${entry##*:}"
         echo "$port $proto"
-        value=`ss -tuln | grep -q "$proto.*:$port "`
-        echo $value
+	value=$(ss -tuln | grep -q "$proto.*:$port ")
+        echo "$value"
         if ss -tuln | grep -q "$proto.*:$port "; then
             echo "Port $port listening"
             append "port_${port}_${proto} is listening"
