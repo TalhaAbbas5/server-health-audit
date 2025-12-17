@@ -1,0 +1,17 @@
+name: Practice 1
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build started
+        run: echo "Build started"
+
+      - name: Build completed
+        run: echo "Build completed"
+
