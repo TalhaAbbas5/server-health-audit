@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -euo pipefail
 
 CONFIG_FILE="$(pwd)/configs/server_audit.conf"
@@ -41,7 +42,7 @@ append() {
 rotate_logs() {
     mkdir -p "$REPORT_DIR"
     cd "$REPORT_DIR" || return
-    files=( $(ls -1t server_report_*.txt 2>/dev/null) )
+    mapfile -t files < <(ls -1t server_report_*.txt 2>/dev/null)
     if (( ${#files[@]} > MAX_REPORTS )); then
         for old_file in "${files[@]:MAX_REPORTS}"; do
             rm -f "$old_file"
