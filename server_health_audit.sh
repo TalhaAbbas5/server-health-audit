@@ -99,8 +99,9 @@ check_memory() {
 # -----------------------------
 check_disk() {
     : >"$DISK_PROM"
-    df -h | tail -n +2 | while read -r filesystem size used avail usep mount; do
+     df -h | tail -n +2 | while read -r filesystem size used avail usep mount; do
         usage="${usep%\%}"  # remove % symbol
+	echo "$filesystem $size $used $avail"
         append "disk_usage $mount $usage"
         echo "Disk_usage{type:\"Disk_usage\",host:\"$HOSTNAME\",Mount_point=\"$mount\"} $usage" >> "$DISK_PROM"
         if [ "$usage" -ge "$DISK_THRESHOLD" ]; then
