@@ -1,0 +1,29 @@
+name: Practice 3
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: echo "Building application"
+
+  deploy_staging:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to staging
+        run: echo "Deploying app staging"
+
+  deploy_production:
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+    environment: production  # 👈 requires manual approval
+    steps:
+      - name: Deploy to production
+        run: echo "Deploying to production"
+
