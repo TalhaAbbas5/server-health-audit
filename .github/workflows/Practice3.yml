@@ -1,0 +1,12 @@
+name: Practice 3
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  date:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print current date
+        run: echo "$(date)"
