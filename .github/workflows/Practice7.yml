@@ -1,0 +1,27 @@
+name: Practice 7
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: echo "Building application"
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests (allowed to fail)
+        continue-on-error: true
+        run: |
+          echo "Running tests"
+          exit 1
+
+      - name: Step after failure
+        run: echo "This step still runs"

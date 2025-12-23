@@ -1,0 +1,36 @@
+name: Practice 8
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build
+        run: echo "Building application"
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck (allowed to fail)
+        continue-on-error: true
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run tests (must pass)
+        run: |
+          echo "Running tests"
+          exit 1
