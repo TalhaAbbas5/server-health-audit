@@ -49,10 +49,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Run sanity tests
+      - name: Prepare scripts
         run: |
           chmod +x tests/sanity_test.sh
-          tests/sanity_test.sh
+          chmod +x tests/sanity_test.sh
+      - name: Run Sanity tests
+        run: tests/sanity_test.sh
 
   package:
     name: Package Artifact
