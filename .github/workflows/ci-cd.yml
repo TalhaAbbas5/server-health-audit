@@ -51,7 +51,7 @@ jobs:
 
       - name: Prepare scripts
         run: |
-          chmod +x tests/sanity_test.sh
+          chmod +x server_health_audit.sh
           chmod +x tests/sanity_test.sh
       - name: Run Sanity tests
         run: tests/sanity_test.sh
