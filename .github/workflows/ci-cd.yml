@@ -34,6 +34,7 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4   # ✅ REQUIRED
       - name: Check required tools
         run: |
           while read -r dep; do
