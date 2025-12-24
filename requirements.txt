@@ -1,0 +1,7 @@
+bash>=4.0
+awk
+grep
+sed
+netstat
+ss
+cron

@@ -1,0 +1,88 @@
+name: Server Health Audit CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: Build & Validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate script permissions
+        run: |
+          chmod +x server_health_audit.sh
+
+  lint:
+    name: ShellCheck (Non-blocking)
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run ShellCheck
+        continue-on-error: true
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+
+  deps:
+    name: Dependency Validation
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required tools
+        run: |
+          while read -r dep; do
+            command -v "${dep%%>*}" >/dev/null || \
+            echo "Missing dependency: $dep"
+          done < requirements.txt
+
+  test:
+    name: Sanity Tests
+    needs: deps
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run sanity tests
+        run: |
+          chmod +x tests/sanity_test.sh
+          tests/sanity_test.sh
+
+  package:
+    name: Package Artifact
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create release bundle
+        run: |
+          tar -czf server-health-audit.tar.gz server_health_audit.sh config.env
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-health-audit
+          path: server-health-audit.tar.gz
+
+  deploy_staging:
+    name: Deploy to Staging
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate staging deploy
+        run: echo "Deploying audit script to STAGING servers"
+
+  deploy_production:
+    name: Deploy to Production
+    needs: deploy_staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Simulate production deploy
+        run: echo "Deploying audit script to PRODUCTION servers"
+
